@@ -85,6 +85,6 @@ public class Main extends JavaPlugin implements Listener{
         	lopescao.teleport(loc);
         	}}).start();
     pescao.remove();}
-
+//comentarioninja
 }
   
