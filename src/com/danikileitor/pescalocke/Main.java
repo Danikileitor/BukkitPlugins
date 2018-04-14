@@ -50,12 +50,12 @@ public class Main extends JavaPlugin implements Listener{
     Player p = entrar.getPlayer();
     
     if (p.hasPlayedBefore() == false) {
-    	p.sendMessage("¡Bienvenido al Pescalocke!");
+    	p.sendMessage("§1¡Bienvenido al Pescalocke!");
     	p.getInventory().addItem(PescaPRO());
     }
     
     if (p.hasPlayedBefore() == true) {
-    	p.sendMessage("Otro día más en el Pescalocke...");
+    	p.sendMessage("§1Otro día más en el Pescalocke...");
     }
     
     }
