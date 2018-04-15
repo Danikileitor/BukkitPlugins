@@ -93,7 +93,6 @@ public class Main extends JavaPlugin implements Listener{
 		if (saleMob){
 
 			new Thread(new Runnable() {
-
 				@Override
 				public void run() {
 					EntityType[] mobs = EntityType.values();
@@ -107,15 +106,16 @@ public class Main extends JavaPlugin implements Listener{
 							aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 							bien=true;
 						}catch(Exception e){}
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {}
-					aparecida.teleport(loc);
+
 					if (pescao instanceof Player){
 						pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
 					}
 					p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {}
+					aparecida.teleport(loc);
 				}
 			}).start();
 
