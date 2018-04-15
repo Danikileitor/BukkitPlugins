@@ -81,16 +81,19 @@ public class Main extends JavaPlugin implements Listener{
 		Player p = pesca.getPlayer();
 
 		pescao.isGlowing();
-		getServer().broadcastMessage("La captura es del tipo: "+pesca.getState().name());
 		@SuppressWarnings("deprecation")
 		ItemStack enMano = p.getItemInHand();
 		ItemStack palo = getPalo();
-		if (!pesca.getState().equals(State.CAUGHT_FISH) || !enMano.isSimilar(palo)){
+		boolean saleMob = false;
+		if (Math.random()>0.75 || pesca.getState().equals(State.CAUGHT_ENTITY)){
+			saleMob=true;
+		}
+		if (/*!pesca.getState().equals(State.CAUGHT_FISH) || */!enMano.isSimilar(palo)){
 			return;
 		}
 
 		final Location loc = p.getLocation();
-		if (new Random().nextInt(4)>=2){
+		if (saleMob){
 			EntityType[] mobs = EntityType.values();
 			int rng = new Random().nextInt(mobs.length);
 
@@ -128,7 +131,10 @@ public class Main extends JavaPlugin implements Listener{
 			inventory.addItem(item);
 			p.sendMessage("§2[PescaLocke]§A Has pescado un "+items[rng].name().toLowerCase().replace("_", " "));
 		}
-		pescao.remove();
+		if (pescao instanceof Player){
+			pescao.teleport(loc);
+		}else
+			pescao.remove();
 	}
 
 	@Override
