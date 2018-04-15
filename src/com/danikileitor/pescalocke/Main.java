@@ -113,6 +113,7 @@ public class Main extends JavaPlugin implements Listener{
 				}catch(Exception e){
 					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
 				}
+
 			}
 
 			if (pescao instanceof Player){
