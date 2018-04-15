@@ -144,7 +144,7 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			int rng=0;
 			ItemStack item;
-			if (Math.random()>0.9){
+			if (Math.random()>0.1){
 				rng = new Random().nextInt(comidas.size());
 				item = new ItemStack(comidas.get(rng));
 			}else{
