@@ -106,19 +106,19 @@ public class Main extends JavaPlugin implements Listener{
 			while(!bien){
 				try{
 					rng = new Random().nextInt(mobs.length);
-					aparecida.setCustomName("§4Random "+mobs[rng].getEntityClass().getSimpleName());
 					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
+					aparecida.setCustomName("§4Random "+mobs[rng].getEntityClass().getTypeName());
 					bien=true;
 				}catch(Exception e){
-					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
+					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
 				}
 			}
 
 			if (pescao instanceof Player){
-				pescao.sendMessage("§2[PescaLocke]§A Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
-				p.sendMessage("§2[PescaLocke]§A Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+				pescao.sendMessage("§2[PescaLocke]§A Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getTypeName());
+				p.sendMessage("§2[PescaLocke]§A Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getTypeName());
 			}else{
-				p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
+				p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getTypeName());
 			}
 			final Entity finalAp= aparecida;
 			new Thread(new Runnable() {
