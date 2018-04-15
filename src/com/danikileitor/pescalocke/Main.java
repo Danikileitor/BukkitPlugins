@@ -100,18 +100,22 @@ public class Main extends JavaPlugin implements Listener{
 
 					Entity aparecida= null;
 					boolean bien= false;
-					while(!bien)
+					while(!bien){
 						try{
 							rng = new Random().nextInt(mobs.length);
 							aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 							bien=true;
-						}catch(Exception e){}
+						}catch(Exception e){
+							getServer().broadcastMessage("§4[PescaLocke]§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
+						}
+					}
 
 					if (pescao instanceof Player){
 						pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+						p.sendMessage("§2[PescaLocke]§A Has pescado a "+p.getName());
+					}else{
+						p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 					}
-					p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
-
 					try {
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {}
