@@ -1,0 +1,3 @@
+Nombre:
+Problema:
+Descripción:
