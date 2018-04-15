@@ -91,34 +91,33 @@ public class Main extends JavaPlugin implements Listener{
 
 		final Location loc = p.getLocation();
 		if (saleMob){
-			EntityType[] mobs = EntityType.values();
-			int rng = new Random().nextInt(mobs.length);
 
-			Entity aparecida= null;
-			boolean bien= false;
-			while(!bien)
-				try{
-					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
-					bien=true;
-				}catch(Exception e){}
-
-			final Entity aparecidaFinal = aparecida;
 			new Thread(new Runnable() {
 
 				@Override
 				public void run() {
+					EntityType[] mobs = EntityType.values();
+					int rng = new Random().nextInt(mobs.length);
+
+					Entity aparecida= null;
+					boolean bien= false;
+					while(!bien)
+						try{
+							aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
+							bien=true;
+						}catch(Exception e){}
 					try {
 						Thread.sleep(2000);
-					} catch (InterruptedException e) {
+					} catch (InterruptedException e) {}
+					aparecida.teleport(loc);
+					if (pescao instanceof Player){
+						pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
 					}
-					aparecidaFinal.teleport(loc);
+					p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
+
 				}
 			}).start();
 
-			if (pescao instanceof Player){
-				pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().name().toLowerCase().replace("_", " "));
-			}
-			p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 		}else{
 			PlayerInventory inventory = p.getInventory();
 			Material[] items = Material.values();
