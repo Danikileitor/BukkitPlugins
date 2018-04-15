@@ -2,6 +2,7 @@ package com.danikileitor.pescalocke;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -68,12 +69,8 @@ public class Main extends JavaPlugin implements Listener{
 			PlayerInventory inventory = player.getInventory();
 			ItemStack itemstack = getPalo();
 
-			if (!inventory.contains(itemstack)) {
-				inventory.addItem(itemstack);
-				player.sendMessage("§2[PescaLocke]§A Tu caña, a pescar que es gerundio.");
-			}else{
-				player.sendMessage("§2[PescaLocke]§A Ya tienes caña, atontao");
-			}
+			inventory.addItem(itemstack);
+			player.sendMessage("§2[PescaLocke]§A Tu caña, a pescar que es gerundio.");
 		}
 	}
 
@@ -101,6 +98,7 @@ public class Main extends JavaPlugin implements Listener{
 		}
 
 		final Location loc = p.getLocation();
+		Logger log = Bukkit.getLogger();
 		if (saleMob){
 			EntityType[] mobs = EntityType.values();
 			int rng = 0;
@@ -113,12 +111,12 @@ public class Main extends JavaPlugin implements Listener{
 					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 					bien=true;
 				}catch(Exception e){
-					getServer().broadcastMessage("§4[PescaLocke]§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
+					log.info("§4[PescaLocke]§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
 				}
 			}
 
 			if (pescao instanceof Player){
-				pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+				pescao.sendMessage("§2[PescaLocke]§A Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
 				p.sendMessage("§2[PescaLocke]§A Has pescado a "+p.getName());
 			}else{
 				p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
