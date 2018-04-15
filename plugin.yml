@@ -1,4 +1,17 @@
 name: Pescalocke
-author: Danikileitor
-version: 1.0
+author: Danikileitor&Cristichi
+version: 1.1
 main: com.danikileitor.pescalocke.Main
+commands:
+   darPalo:
+      description: Te da un palo de pescar
+      permission: pescalocke.dar
+      usage: /darPalo [Jugador]
+permissions:
+    pescalocke:
+        description: Vale para todo eres un pro que no te digan lo contrario
+        children:
+            pescalocke.dar: true
+    pescalocke.dar:
+        description: Te ase usar como un pro el comando pro de la caca
+        default: not op
