@@ -37,7 +37,7 @@ public class Main extends JavaPlugin implements Listener{
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
-		propied.setDisplayName("§4§KEres una Caca");
+		propied.setDisplayName("§4§KCaña de Pescar &6RANDOM");
 		item.setItemMeta(propied);
 
 		return item;
@@ -102,35 +102,35 @@ public class Main extends JavaPlugin implements Listener{
 
 		final Location loc = p.getLocation();
 		if (saleMob){
+			EntityType[] mobs = EntityType.values();
+			int rng = 0;
 
+			Entity aparecida= null;
+			boolean bien= false;
+			while(!bien){
+				try{
+					rng = new Random().nextInt(mobs.length);
+					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
+					bien=true;
+				}catch(Exception e){
+					getServer().broadcastMessage("§4[PescaLocke]§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
+				}
+			}
+
+			if (pescao instanceof Player){
+				pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+				p.sendMessage("§2[PescaLocke]§A Has pescado a "+p.getName());
+			}else{
+				p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
+			}
+			final Entity finalAp= aparecida;
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
-					EntityType[] mobs = EntityType.values();
-					int rng = 0;
-
-					Entity aparecida= null;
-					boolean bien= false;
-					while(!bien){
-						try{
-							rng = new Random().nextInt(mobs.length);
-							aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
-							bien=true;
-						}catch(Exception e){
-							getServer().broadcastMessage("§4[PescaLocke]§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
-						}
-					}
-
-					if (pescao instanceof Player){
-						pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
-						p.sendMessage("§2[PescaLocke]§A Has pescado a "+p.getName());
-					}else{
-						p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
-					}
 					try {
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {}
-					aparecida.teleport(loc);
+					finalAp.teleport(loc);
 				}
 			}).start();
 
