@@ -37,7 +37,7 @@ public class Main extends JavaPlugin implements Listener{
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
-		propied.setDisplayName("§4§KCaña de Pescar &6RANDOM");
+		propied.setDisplayName("§4§KCaña de Pescar §6RANDOM");
 		item.setItemMeta(propied);
 
 		return item;
@@ -126,8 +126,9 @@ public class Main extends JavaPlugin implements Listener{
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
+					finalAp.teleport(loc);
 					try {
-						Thread.sleep(500);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {}
 					finalAp.teleport(loc);
 				}
@@ -136,9 +137,15 @@ public class Main extends JavaPlugin implements Listener{
 		}else{
 			PlayerInventory inventory = p.getInventory();
 			Material[] items = Material.values();
-			int rng = new Random().nextInt(items.length);
+			ArrayList<Material> comidas = new ArrayList<>();
+			for (int i = 0; i < items.length; i++) {
+				if (items[i].isEdible()){
+					comidas.add(items[i]);
+				}
+			}
+			int rng = new Random().nextInt(comidas.size());
 
-			ItemStack item = new ItemStack(items[rng]);
+			ItemStack item = new ItemStack(comidas.get(rng));
 			ItemMeta propied = item.getItemMeta();
 			if (item.getType().equals(Material.BOOK)){
 				Enchantment[] encs = Enchantment.values();
