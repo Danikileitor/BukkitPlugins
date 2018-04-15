@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -75,6 +76,16 @@ public class Main extends JavaPlugin implements Listener{
 			}
 		}
 	}
+
+	@EventHandler
+	public void onPlayerRespawn(PlayerRespawnEvent e) {
+		Player player = e.getPlayer();
+		PlayerInventory inventory = player.getInventory();
+		ItemStack itemstack = getPalo();
+		inventory.addItem(itemstack);
+		player.sendMessage("§2[PescaLocke]§A Tu caña, a pescar que es gerundio.");
+	}
+
 	@EventHandler
 	public void onPlayerFish(PlayerFishEvent pesca) {
 		Entity pescao = pesca.getCaught();
