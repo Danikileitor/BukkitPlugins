@@ -117,7 +117,7 @@ public class Main extends JavaPlugin implements Listener{
 
 			if (pescao instanceof Player){
 				pescao.sendMessage("§2[PescaLocke]§A Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
-				p.sendMessage("§2[PescaLocke]§A Has pescado a "+p.getName());
+				p.sendMessage("§2[PescaLocke]§A Has pescado a "+pescao.getName());
 			}else{
 				p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 			}
