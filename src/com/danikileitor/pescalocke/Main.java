@@ -161,6 +161,14 @@ public class Main extends JavaPlugin implements Listener{
                     return;
         		}
 			}
+
+        	montados = event.getTarget().getPassengers();
+        	for (int i = 0; i < montados.size(); i++) {
+        		if (montados.get(i).getCustomName().equalsIgnoreCase(event.getTarget().getCustomName())){
+                    event.setCancelled(true);
+                    return;
+        		}
+			}
         }
     }
 	/*
