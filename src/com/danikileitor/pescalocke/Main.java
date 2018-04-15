@@ -85,7 +85,7 @@ public class Main extends JavaPlugin implements Listener{
 
 		pescao.isGlowing();
 		boolean saleMob = false;
-		if (Math.random()>0.90 || pesca.getState().equals(State.CAUGHT_ENTITY)){
+		if (Math.random()>0.80 || pesca.getState().equals(State.CAUGHT_ENTITY)){
 			saleMob=true;
 		}
 
@@ -116,7 +116,7 @@ public class Main extends JavaPlugin implements Listener{
 			}).start();
 
 			if (pescao instanceof Player){
-				pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getCustomName());
+				pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().name().toLowerCase().replace("_", " "));
 			}
 			p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 		}else{
