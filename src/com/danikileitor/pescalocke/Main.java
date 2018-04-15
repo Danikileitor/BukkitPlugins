@@ -81,6 +81,7 @@ public class Main extends JavaPlugin implements Listener{
 		Player p = pesca.getPlayer();
 
 		pescao.isGlowing();
+		getServer().broadcastMessage("La captura es del tipo: "+pesca.getState().name());
 		@SuppressWarnings("deprecation")
 		ItemStack enMano = p.getItemInHand();
 		ItemStack palo = getPalo();
