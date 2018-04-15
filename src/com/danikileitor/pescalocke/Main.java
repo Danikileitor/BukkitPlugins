@@ -113,7 +113,6 @@ public class Main extends JavaPlugin implements Listener{
 				}catch(Exception e){
 					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
 				}
-
 			}
 
 			if (pescao instanceof Player){
@@ -143,9 +142,16 @@ public class Main extends JavaPlugin implements Listener{
 					comidas.add(items[i]);
 				}
 			}
-			int rng = new Random().nextInt(comidas.size());
+			int rng=0;
+			ItemStack item;
+			if (Math.random()>0.9){
+				rng = new Random().nextInt(comidas.size());
+				item = new ItemStack(comidas.get(rng));
+			}else{
+				rng = new Random().nextInt(items.length);
+				item = new ItemStack(items[rng]);
+			}
 
-			ItemStack item = new ItemStack(comidas.get(rng));
 			ItemMeta propied = item.getItemMeta();
 			if (item.getType().equals(Material.BOOK)){
 				Enchantment[] encs = Enchantment.values();
