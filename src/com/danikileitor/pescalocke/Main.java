@@ -84,9 +84,6 @@ public class Main extends JavaPlugin implements Listener{
 		Player p = pesca.getPlayer();
 
 		pescao.isGlowing();
-		@SuppressWarnings("deprecation")
-		ItemStack enMano = p.getItemInHand();
-		ItemStack palo = getPalo();
 		boolean saleMob = false;
 		if (Math.random()>0.75 || pesca.getState().equals(State.CAUGHT_ENTITY)){
 			saleMob=true;
@@ -97,7 +94,15 @@ public class Main extends JavaPlugin implements Listener{
 			EntityType[] mobs = EntityType.values();
 			int rng = new Random().nextInt(mobs.length);
 
-			Entity aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
+			Entity aparecida= null;
+			boolean bien= false;
+			while(!bien)
+				try{
+					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
+					bien=true;
+				}catch(Exception e){}
+
+			final Entity aparecidaFinal = aparecida;
 			new Thread(new Runnable() {
 
 				@Override
@@ -106,10 +111,13 @@ public class Main extends JavaPlugin implements Listener{
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 					}
-					aparecida.teleport(loc);
+					aparecidaFinal.teleport(loc);
 				}
 			}).start();
 
+			if (pescao instanceof Player){
+				pescao.sendMessage("Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getCustomName());
+			}
 			p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 		}else{
 			PlayerInventory inventory = p.getInventory();
