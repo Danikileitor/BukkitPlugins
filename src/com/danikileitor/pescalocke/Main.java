@@ -85,7 +85,7 @@ public class Main extends JavaPlugin implements Listener{
 
 		pescao.isGlowing();
 		boolean saleMob = false;
-		if (Math.random()>0.75 || pesca.getState().equals(State.CAUGHT_ENTITY)){
+		if (Math.random()>0.90 || pesca.getState().equals(State.CAUGHT_ENTITY)){
 			saleMob=true;
 		}
 
