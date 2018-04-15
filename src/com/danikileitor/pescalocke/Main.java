@@ -40,13 +40,31 @@ public class Main extends JavaPlugin implements Listener{
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
-		propied.setDisplayName("§4§KCaña de Pescar 1 §6§K§ORANDOM");
+		propied.setDisplayName("§4§KCaña de Pescar 1§6§O RANDOM");
 		item.setItemMeta(propied);
 
 		return item;
 	}
 
 	public ItemStack getPaloNombres(){
+		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
+
+		ItemMeta propied = item.getItemMeta();
+		ArrayList<String> lores = new ArrayList<>();
+		lores.add("Pon tu nombre en todo");
+		lores.add("Generada por PescaLocke");
+		propied.setLore(lores);
+		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
+		propied.setDisplayName("§4§KCaña de Pescar 2§6§O NOMBRES");
+		item.setItemMeta(propied);
+
+		return item;
+	}
+
+	public ItemStack getPaloMontura(){
 		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
 
 		ItemMeta propied = item.getItemMeta();
@@ -88,9 +106,10 @@ public class Main extends JavaPlugin implements Listener{
 		if (!player.hasPlayedBefore()){
 			PlayerInventory inventory = player.getInventory();
 			ItemStack itemstack = getPaloRandom();
-
 			inventory.addItem(itemstack);
-			player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
+			itemstack = getPaloNombres();
+			inventory.addItem(itemstack);
+			player.sendMessage(MSG+" Has recibido las cañas del amor.");
 		}
 	}
 
@@ -100,7 +119,8 @@ public class Main extends JavaPlugin implements Listener{
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemstack = getPaloRandom();
 		inventory.addItem(itemstack);
-		player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
+		itemstack = getPaloNombres();
+		inventory.addItem(itemstack);
 	}
 	/*
 	@EventHandler
