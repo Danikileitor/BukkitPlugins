@@ -125,6 +125,7 @@ public class Main extends JavaPlugin implements Listener{
 			}else{
 				p.sendMessage(MSG+" Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 			}
+
 			final Entity finalAp= aparecida;
 			new Thread(new Runnable() {
 				@Override
