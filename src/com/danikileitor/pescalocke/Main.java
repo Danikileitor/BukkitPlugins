@@ -97,12 +97,13 @@ public class Main extends JavaPlugin implements Listener{
 				@Override
 				public void run() {
 					EntityType[] mobs = EntityType.values();
-					int rng = new Random().nextInt(mobs.length);
+					int rng = 0;
 
 					Entity aparecida= null;
 					boolean bien= false;
 					while(!bien)
 						try{
+							rng = new Random().nextInt(mobs.length);
 							aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 							bien=true;
 						}catch(Exception e){}
