@@ -25,19 +25,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements Listener{
 
+	private final String NOMBRE_PL= "Random Fishing";
+	private final String MSG= "§2["+NOMBRE_PL+"]§A";
+
 	public ItemStack getPalo(){
 		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
 
 		ItemMeta propied = item.getItemMeta();
 		ArrayList<String> lores = new ArrayList<>();
 		lores.add("Caña buena");
-		lores.add("Generada por PescaLocke, por CristichiEX");
+		lores.add("Generada por PescaLocke");
 		propied.setLore(lores);
 		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
-		propied.setDisplayName("§4§KCaña de Pescar §6RANDOM");
+		propied.setDisplayName("§4§KCaña de Pescar §6§K§ORANDOM");
 		item.setItemMeta(propied);
 
 		return item;
@@ -52,7 +55,7 @@ public class Main extends JavaPlugin implements Listener{
 
 	@Override
 	public void onLoad() {
-		getServer().broadcastMessage("§2[PescaLocke]§A Plugin cargado correctamente");
+		getServer().broadcastMessage(MSG+" Plugin cargado correctamente");
 		super.onLoad();
 	}
 
@@ -69,7 +72,7 @@ public class Main extends JavaPlugin implements Listener{
 			ItemStack itemstack = getPalo();
 
 			inventory.addItem(itemstack);
-			player.sendMessage("§2[PescaLocke]§A Tu caña, a pescar que es gerundio.");
+			player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
 		}
 	}
 
@@ -79,7 +82,7 @@ public class Main extends JavaPlugin implements Listener{
 		PlayerInventory inventory = player.getInventory();
 		ItemStack itemstack = getPalo();
 		inventory.addItem(itemstack);
-		player.sendMessage("§2[PescaLocke]§A Tu caña, a pescar que es gerundio.");
+		player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
 	}
 
 	@EventHandler
@@ -109,6 +112,7 @@ public class Main extends JavaPlugin implements Listener{
 					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 					aparecida.setCustomName("§4Random "+mobs[rng].getEntityClass().getSimpleName());
 					aparecida.setCustomNameVisible(true);
+					aparecida.setGlowing(true);
 					bien=true;
 				}catch(Exception e){
 					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
@@ -116,20 +120,26 @@ public class Main extends JavaPlugin implements Listener{
 			}
 
 			if (pescao instanceof Player){
-				pescao.sendMessage("§2[PescaLocke]§A Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
-				p.sendMessage("§2[PescaLocke]§A Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+				pescao.sendMessage(MSG+" Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+				p.sendMessage(MSG+" Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
 			}else{
-				p.sendMessage("§2[PescaLocke]§A Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
+				p.sendMessage(MSG+" Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 			}
 			final Entity finalAp= aparecida;
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
+					String name = finalAp.getCustomName();
+					int ticks=10;
+					for (int i = ticks; i > 0; i--) {
+						finalAp.setCustomName(name+"§5 "+i);
+						try {
+							Thread.sleep(100);
+						}catch(InterruptedException e) {}
+					}
 					finalAp.teleport(loc);
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {}
-					finalAp.teleport(loc);
+					finalAp.setCustomName(name);
+					finalAp.setGlowing(false);
 				}
 			}).start();
 
@@ -147,9 +157,11 @@ public class Main extends JavaPlugin implements Listener{
 			if (Math.random()>0.1){
 				rng = new Random().nextInt(comidas.size());
 				item = new ItemStack(comidas.get(rng));
+				p.sendMessage(MSG+" Has pescado un "+comidas.get(rng).name().toLowerCase().replace("_", " "));
 			}else{
 				rng = new Random().nextInt(items.length);
 				item = new ItemStack(items[rng]);
+				p.sendMessage(MSG+" Has pescado un "+items[rng].name().toLowerCase().replace("_", " "));
 			}
 
 			ItemMeta propied = item.getItemMeta();
@@ -164,7 +176,6 @@ public class Main extends JavaPlugin implements Listener{
 			item.setItemMeta(propied);
 
 			inventory.addItem(item);
-			p.sendMessage("§2[PescaLocke]§A Has pescado un "+items[rng].name().toLowerCase().replace("_", " "));
 		}
 		if (pescao instanceof Player){
 			pescao.teleport(loc);
