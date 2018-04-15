@@ -33,14 +33,14 @@ public class Main extends JavaPlugin implements Listener{
 
 		ItemMeta propied = item.getItemMeta();
 		ArrayList<String> lores = new ArrayList<>();
-		lores.add("Caña buena");
+		lores.add("Aleatoriza tu mundo");
 		lores.add("Generada por PescaLocke");
 		propied.setLore(lores);
 		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
-		propied.setDisplayName("§4§KCaña de Pescar §6§K§ORANDOM");
+		propied.setDisplayName("§4§KCaña de Pescar 1 §6§K§ORANDOM");
 		item.setItemMeta(propied);
 
 		return item;
@@ -83,6 +83,44 @@ public class Main extends JavaPlugin implements Listener{
 		ItemStack itemstack = getPalo();
 		inventory.addItem(itemstack);
 		player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
+	}
+
+	/*
+	@EventHandler
+	public void onEntityHit(EntityDamageByEntityEvent e){
+		if (e.getDamager() instanceof Player){
+			getServer().broadcastMessage(e.getDamager().getName()+" > "+e.getEntity().getName());
+			Player p = (Player) e.getDamager();
+			@SuppressWarnings("deprecation")
+			ItemStack mano = p.getItemInHand();
+			ItemStack palo = getPalo();
+			if (mismoItem(mano, palo)){
+
+			}
+		}
+	}*/
+
+	public boolean mismoItem(ItemStack a, ItemStack b){
+		String n1, n2;
+		if (a.hasItemMeta())
+			n1= a.getItemMeta().getDisplayName();
+		else
+			n1 = a.getType().name();
+		if (b.hasItemMeta())
+			n2=b.getItemMeta().getDisplayName();
+		else
+			n2 = b.getType().name();
+		return n1.equals(n2);
+	}
+
+
+	public boolean tieneEseNombre(ItemStack a, String b){
+		String n1;
+		if (a.hasItemMeta())
+			n1= a.getItemMeta().getDisplayName();
+		else
+			n1 = a.getType().name();
+		return n1.equals(b);
 	}
 
 	@EventHandler
