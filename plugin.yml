@@ -11,15 +11,23 @@ commands:
       description: Te da un palo de pescar
       permission: pescalocke.dar.nombres
       usage: /darPaloNombres [Jugador]
+   darPaloMonturas:
+      description: Te da un palo de pescar
+      permission: pescalocke.dar.monturas
+      usage: /darPaloMonturas [Jugador]
 permissions:
     pescalocke:
         description: Vale para todo eres un pro que no te digan lo contrario
         children:
             pescalocke.dar.random: true
             pescalocke.dar.nombres: true
+            pescalocke.dar.monturas: true
     pescalocke.dar.random:
         description: Te permite dar palos de aleatorizar
         default: not op
     pescalocke.dar.nombres:
+        description: Te permite dar palos de poner nombre
+        default: not op
+    pescalocke.dar.monturas:
         description: Te permite dar palos de poner nombre
         default: not op
