@@ -78,6 +78,9 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerFish(PlayerFishEvent pesca) {
 		Entity pescao = pesca.getCaught();
+		if (pescao==null){
+			return;
+		}
 		Player p = pesca.getPlayer();
 
 		pescao.isGlowing();
@@ -87,9 +90,6 @@ public class Main extends JavaPlugin implements Listener{
 		boolean saleMob = false;
 		if (Math.random()>0.75 || pesca.getState().equals(State.CAUGHT_ENTITY)){
 			saleMob=true;
-		}
-		if (/*!pesca.getState().equals(State.CAUGHT_FISH) || */!enMano.isSimilar(palo)){
-			return;
 		}
 
 		final Location loc = p.getLocation();
