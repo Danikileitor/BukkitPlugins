@@ -2,7 +2,6 @@ package com.danikileitor.pescalocke;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -98,7 +97,6 @@ public class Main extends JavaPlugin implements Listener{
 		}
 
 		final Location loc = p.getLocation();
-		Logger log = Bukkit.getLogger();
 		if (saleMob){
 			EntityType[] mobs = EntityType.values();
 			int rng = 0;
@@ -111,7 +109,7 @@ public class Main extends JavaPlugin implements Listener{
 					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 					bien=true;
 				}catch(Exception e){
-					log.info("§4[PescaLocke]§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
+					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getSimpleName());
 				}
 			}
 
@@ -126,7 +124,7 @@ public class Main extends JavaPlugin implements Listener{
 				@Override
 				public void run() {
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(500);
 					} catch (InterruptedException e) {}
 					finalAp.teleport(loc);
 				}
