@@ -3,15 +3,23 @@ author: Danikileitor&Cristichi
 version: 1.2
 main: com.danikileitor.pescalocke.Main
 commands:
-   darPalo:
+   darPaloRandom:
       description: Te da un palo de pescar
-      permission: pescalocke.dar
-      usage: /darPalo [Jugador]
+      permission: pescalocke.dar.random
+      usage: /darPaloRandom [Jugador]
+   darPaloNombres:
+      description: Te da un palo de pescar
+      permission: pescalocke.dar.nombres
+      usage: /darPaloNombres [Jugador]
 permissions:
     pescalocke:
         description: Vale para todo eres un pro que no te digan lo contrario
         children:
-            pescalocke.dar: true
-    pescalocke.dar:
-        description: Te ase usar como un pro el comando pro de la caca
+            pescalocke.dar.random: true
+            pescalocke.dar.nombres: true
+    pescalocke.dar.random:
+        description: Te permite dar palos de aleatorizar
+        default: not op
+    pescalocke.dar.nombres:
+        description: Te permite dar palos de poner nombre
         default: not op

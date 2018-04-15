@@ -28,7 +28,7 @@ public class Main extends JavaPlugin implements Listener{
 	private final String NOMBRE_PL= "Random Fishing";
 	private final String MSG= "§2["+NOMBRE_PL+"]§A";
 
-	public ItemStack getPalo(){
+	public ItemStack getPaloRandom(){
 		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
 
 		ItemMeta propied = item.getItemMeta();
@@ -41,6 +41,24 @@ public class Main extends JavaPlugin implements Listener{
 		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
 		propied.setDisplayName("§4§KCaña de Pescar 1 §6§K§ORANDOM");
+		item.setItemMeta(propied);
+
+		return item;
+	}
+
+	public ItemStack getPaloNombres(){
+		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
+
+		ItemMeta propied = item.getItemMeta();
+		ArrayList<String> lores = new ArrayList<>();
+		lores.add("Pon tu nombre en todo");
+		lores.add("Generada por PescaLocke");
+		propied.setLore(lores);
+		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
+		propied.setDisplayName("§4§KCaña de Pescar 2 §6§K§ONOMBRES");
 		item.setItemMeta(propied);
 
 		return item;
@@ -69,7 +87,7 @@ public class Main extends JavaPlugin implements Listener{
 		Player player = e.getPlayer();
 		if (!player.hasPlayedBefore()){
 			PlayerInventory inventory = player.getInventory();
-			ItemStack itemstack = getPalo();
+			ItemStack itemstack = getPaloRandom();
 
 			inventory.addItem(itemstack);
 			player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
@@ -80,11 +98,10 @@ public class Main extends JavaPlugin implements Listener{
 	public void onPlayerRespawn(PlayerRespawnEvent e) {
 		Player player = e.getPlayer();
 		PlayerInventory inventory = player.getInventory();
-		ItemStack itemstack = getPalo();
+		ItemStack itemstack = getPaloRandom();
 		inventory.addItem(itemstack);
 		player.sendMessage(MSG+" Tu caña, a pescar que es gerundio.");
 	}
-
 	/*
 	@EventHandler
 	public void onEntityHit(EntityDamageByEntityEvent e){
@@ -93,12 +110,13 @@ public class Main extends JavaPlugin implements Listener{
 			Player p = (Player) e.getDamager();
 			@SuppressWarnings("deprecation")
 			ItemStack mano = p.getItemInHand();
-			ItemStack palo = getPalo();
+			ItemStack palo = getPaloRandom();
 			if (mismoItem(mano, palo)){
 
 			}
 		}
-	}*/
+	}
+	 */
 
 	public boolean mismoItem(ItemStack a, ItemStack b){
 		String n1, n2;
@@ -132,99 +150,109 @@ public class Main extends JavaPlugin implements Listener{
 		Player p = pesca.getPlayer();
 
 		pescao.isGlowing();
-		boolean saleMob = false;
-		if (Math.random()>0.80 || pesca.getState().equals(State.CAUGHT_ENTITY)){
-			saleMob=true;
-		}
+		@SuppressWarnings("deprecation")
+		ItemStack mano = p.getItemInHand();
 
-		final Location loc = p.getLocation();
-		if (saleMob){
-			EntityType[] mobs = EntityType.values();
-			int rng = 0;
 
-			Entity aparecida= null;
-			boolean bien= false;
-			while(!bien){
-				try{
-					rng = new Random().nextInt(mobs.length);
-					aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
-					aparecida.setCustomName("§4Random "+mobs[rng].getEntityClass().getSimpleName());
-					aparecida.setCustomNameVisible(true);
-					aparecida.setGlowing(true);
-					bien=true;
-				}catch(Exception e){
-					//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
-				}
+		if (mismoItem(mano, getPaloNombres())){
+			pescao.setCustomName("§6"+p.getDisplayName());
+			pescao.setCustomNameVisible(true);
+
+		}else if (mismoItem(mano, getPaloRandom())){
+			boolean saleMob = false;
+			if (Math.random()>0.80 || pesca.getState().equals(State.CAUGHT_ENTITY)){
+				saleMob=true;
 			}
 
-			if (pescao instanceof Player){
-				pescao.sendMessage(MSG+" Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
-				p.sendMessage(MSG+" Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
-			}else{
-				p.sendMessage(MSG+" Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
-			}
+			final Location loc = p.getLocation();
+			if (saleMob){
+				EntityType[] mobs = EntityType.values();
+				int rng = 0;
 
-			final Entity finalAp= aparecida;
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					String name = finalAp.getCustomName();
-					int ticks=10;
-					for (int i = ticks; i > 0; i--) {
-						finalAp.setCustomName(name+"§5 "+i);
-						try {
-							Thread.sleep(100);
-						}catch(InterruptedException e) {}
+				Entity aparecida= null;
+				boolean bien= false;
+				while(!bien){
+					try{
+						rng = new Random().nextInt(mobs.length);
+						aparecida = p.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
+						aparecida.setCustomName("§4Random "+mobs[rng].getEntityClass().getSimpleName());
+						aparecida.setCustomNameVisible(true);
+						aparecida.setGlowing(true);
+						bien=true;
+					}catch(Exception e){
+						//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
 					}
-					finalAp.teleport(loc);
-					finalAp.setCustomName(name);
-					finalAp.setGlowing(false);
 				}
-			}).start();
 
-		}else{
-			PlayerInventory inventory = p.getInventory();
-			Material[] items = Material.values();
-			ArrayList<Material> comidas = new ArrayList<>();
-			for (int i = 0; i < items.length; i++) {
-				if (items[i].isEdible()){
-					comidas.add(items[i]);
+				if (pescao instanceof Player){
+					pescao.sendMessage(MSG+" Te ha pescado "+p.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+					p.sendMessage(MSG+" Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
+				}else{
+					p.sendMessage(MSG+" Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
 				}
-			}
-			int rng=0;
-			ItemStack item;
-			if (Math.random()>0.1){
-				rng = new Random().nextInt(comidas.size());
-				item = new ItemStack(comidas.get(rng));
-				p.sendMessage(MSG+" Has pescado un "+comidas.get(rng).name().toLowerCase().replace("_", " "));
+
+				final Entity finalAp= aparecida;
+				new Thread(new Runnable() {
+					@Override
+					public void run() {
+						String name = finalAp.getCustomName();
+						int ticks=10;
+						for (int i = ticks; i > 0; i--) {
+							finalAp.setCustomName(name+"§5 "+i);
+							try {
+								Thread.sleep(100);
+							}catch(InterruptedException e) {}
+						}
+						finalAp.teleport(loc);
+						finalAp.setCustomName(name);
+						finalAp.setGlowing(false);
+					}
+				}).start();
+
 			}else{
-				rng = new Random().nextInt(items.length);
-				item = new ItemStack(items[rng]);
-				p.sendMessage(MSG+" Has pescado un "+items[rng].name().toLowerCase().replace("_", " "));
-			}
-
-			ItemMeta propied = item.getItemMeta();
-			if (item.getType().equals(Material.BOOK)){
-				Enchantment[] encs = Enchantment.values();
-				int numRandom = new Random().nextInt(40);
-				for (int i = 0; i < numRandom; i++) {
-					int rng2 = new Random().nextInt(encs.length);
-					propied.addEnchant(encs[rng2], encs[rng2].getMaxLevel(), true);
+				PlayerInventory inventory = p.getInventory();
+				Material[] items = Material.values();
+				ArrayList<Material> comidas = new ArrayList<>();
+				for (int i = 0; i < items.length; i++) {
+					if (items[i].isEdible()){
+						comidas.add(items[i]);
+					}
 				}
-			}
-			item.setItemMeta(propied);
+				int rng=0;
+				ItemStack item;
+				if (Math.random()>0.1){
+					rng = new Random().nextInt(comidas.size());
+					item = new ItemStack(comidas.get(rng));
+					p.sendMessage(MSG+" Has pescado un "+comidas.get(rng).name().toLowerCase().replace("_", " "));
+				}else{
+					rng = new Random().nextInt(items.length);
+					item = new ItemStack(items[rng]);
+					p.sendMessage(MSG+" Has pescado un "+items[rng].name().toLowerCase().replace("_", " "));
+				}
 
-			inventory.addItem(item);
+				ItemMeta propied = item.getItemMeta();
+				if (item.getType().equals(Material.BOOK)){
+					Enchantment[] encs = Enchantment.values();
+					int numRandom = new Random().nextInt(40);
+					for (int i = 0; i < numRandom; i++) {
+						int rng2 = new Random().nextInt(encs.length);
+						propied.addEnchant(encs[rng2], encs[rng2].getMaxLevel(), true);
+					}
+				}
+				item.setItemMeta(propied);
+
+				inventory.addItem(item);
+			}
+			if (pescao instanceof Player){
+				pescao.teleport(loc);
+			}else
+				pescao.remove();
 		}
-		if (pescao instanceof Player){
-			pescao.teleport(loc);
-		}else
-			pescao.remove();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (command.getName().equalsIgnoreCase("darPalo")){
+		if (command.getName().equalsIgnoreCase("darPaloRandom")){
 			try{
 				if (args.length!=1){
 					args= new String[]{((Player)sender).getName()};
@@ -233,7 +261,35 @@ public class Main extends JavaPlugin implements Listener{
 				@SuppressWarnings("deprecation")
 				Player player = Bukkit.getPlayer(args[0]);
 				PlayerInventory inventory = player.getInventory();
-				ItemStack itemstack = getPalo();
+				ItemStack itemstack = getPaloRandom();
+
+				inventory.addItem(itemstack);
+
+			}catch(Exception e){
+				if (args.length!=1){
+					return false;
+				}
+				try{
+					Player tio = (Player)sender;
+					tio.sendMessage("El jugador "+args[0]+" no existe.");
+				}catch(Exception e1){
+					Bukkit.getConsoleSender().sendMessage("El jugador "+args[0]+" no existe.");
+				}
+			}
+
+			return true;
+		}
+
+		else if (command.getName().equalsIgnoreCase("darPaloNombres")){
+			try{
+				if (args.length!=1){
+					args= new String[]{((Player)sender).getName()};
+				}
+
+				@SuppressWarnings("deprecation")
+				Player player = Bukkit.getPlayer(args[0]);
+				PlayerInventory inventory = player.getInventory();
+				ItemStack itemstack = getPaloNombres();
 
 				inventory.addItem(itemstack);
 
