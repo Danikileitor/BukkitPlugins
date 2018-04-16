@@ -15,7 +15,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -26,6 +25,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements Listener{
+
+	private Ajuste[] ajustes = new Ajuste[]{
+			new Ajuste("giveAllOnRespawn", false),
+			new Ajuste("giveAllOnFirstJoin", true)
+	};
 
 	private final String NOMBRE_PL= "Random Fishing";
 	private final String MSG= "§2["+NOMBRE_PL+"]§A";
@@ -84,39 +88,30 @@ public class Main extends JavaPlugin implements Listener{
 		return item;
 	}
 
-	public ItemStack getPaloMontate(){
-		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
-
-		ItemMeta propied = item.getItemMeta();
-		ArrayList<String> lores = new ArrayList<>();
-		lores.add("Pon tu nombre en todo");
-		lores.add("Generada por PescaLocke");
-		propied.setLore(lores);
-		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
-		propied.setDisplayName("§4§KCaña de Pescar 3§6§O MONTATE");
-		item.setItemMeta(propied);
-
-		return item;
-	}
-
 	@Override
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
-		getLogger().info("§2Plugin cargado correctamente");
 		super.onEnable();
 	}
 
 	@Override
 	public void onLoad() {
+		for (int i = 0; i < ajustes.length; i++) {
+			if (!getConfig().isSet(ajustes[i].clave)){
+				getConfig().set(ajustes[i].clave, ajustes[i].porDefecto);
+				getServer().broadcastMessage(MSG+" Ajustado "+ajustes[i].clave+" al valor por defecto ("+ajustes[i].toString()+")");
+			}else{
+				getConfig().set(ajustes[i].clave, getConfig().getBoolean(ajustes[i].clave));
+			}
+		}
+		saveConfig();
 		getServer().broadcastMessage(MSG+" Plugin cargado correctamente");
 		super.onLoad();
 	}
 
 	@Override
 	public void onDisable() {
+		saveConfig();
 		super.onDisable();
 	}
 
@@ -129,8 +124,6 @@ public class Main extends JavaPlugin implements Listener{
 			inventory.addItem(itemstack);
 			itemstack = getPaloNombres();
 			inventory.addItem(itemstack);
-			itemstack = getPaloMontate();
-			inventory.addItem(itemstack);
 			itemstack = getPaloMontame();
 			inventory.addItem(itemstack);
 			player.sendMessage(MSG+" Has recibido las cañas del amor.");
@@ -139,38 +132,21 @@ public class Main extends JavaPlugin implements Listener{
 
 	@EventHandler
 	public void onPlayerRespawn(PlayerRespawnEvent e) {
-		Player player = e.getPlayer();
-		PlayerInventory inventory = player.getInventory();
-		ItemStack itemstack = getPaloRandom();
-		inventory.addItem(itemstack);
-		itemstack = getPaloNombres();
-		inventory.addItem(itemstack);
-		itemstack = getPaloMontate();
-		inventory.addItem(itemstack);
-		itemstack = getPaloMontame();
-		inventory.addItem(itemstack);
+		reloadConfig();
+		Boolean configDarTodoRespawn = getConfig().getBoolean(ajustes[0].clave);
+
+		if (configDarTodoRespawn){
+			Player player = e.getPlayer();
+			PlayerInventory inventory = player.getInventory();
+			ItemStack itemstack = getPaloRandom();
+			inventory.addItem(itemstack);
+			itemstack = getPaloNombres();
+			inventory.addItem(itemstack);
+			itemstack = getPaloMontame();
+			inventory.addItem(itemstack);
+		}
 	}
 
-    @EventHandler
-    public void onEntityTarget(EntityTargetLivingEntityEvent event){
-        if (event.getTarget() instanceof Player){
-        	List<Entity> montados = event.getEntity().getPassengers();
-        	for (int i = 0; i < montados.size(); i++) {
-        		if (montados.get(i).getCustomName().equalsIgnoreCase(event.getTarget().getCustomName())){
-                    event.setCancelled(true);
-                    return;
-        		}
-			}
-
-        	montados = event.getTarget().getPassengers();
-        	for (int i = 0; i < montados.size(); i++) {
-        		if (montados.get(i).getCustomName().equalsIgnoreCase(event.getTarget().getCustomName())){
-                    event.setCancelled(true);
-                    return;
-        		}
-			}
-        }
-    }
 	/*
 	@EventHandler
 	public void onEntityHit(EntityDamageByEntityEvent e){
@@ -228,18 +204,11 @@ public class Main extends JavaPlugin implements Listener{
 			pescao.setCustomNameVisible(true);
 
 		}else if (mismoItem(mano, getPaloMontame())){
-        	List<Entity> montados = jugador.getPassengers();
-        	for (int i = 0; i < montados.size(); i++) {
-        		pescao.addPassenger(montados.get(i));
+			List<Entity> montados = jugador.getPassengers();
+			for (int i = 0; i < montados.size(); i++) {
+				pescao.addPassenger(montados.get(i));
 			}
 			pescao.addPassenger(jugador);
-
-		}else if (mismoItem(mano, getPaloMontate())){
-			List<Entity> montados = pescao.getPassengers();
-        	for (int i = 0; i < montados.size(); i++) {
-    			jugador.addPassenger(montados.get(i));
-			}
-        	jugador.addPassenger(pescao);
 
 		}else if (mismoItem(mano, getPaloRandom())){
 			boolean saleMob = false;
@@ -356,7 +325,7 @@ public class Main extends JavaPlugin implements Listener{
 					Player tio = (Player)sender;
 					tio.sendMessage("El jugador "+args[0]+" no existe.");
 				}catch(Exception e1){
-					Bukkit.getConsoleSender().sendMessage("El jugador "+args[0]+" no existe.");
+					getServer().broadcastMessage(MSG+" El jugador "+args[0]+" no existe.");
 				}
 			}
 
@@ -401,8 +370,6 @@ public class Main extends JavaPlugin implements Listener{
 				Player player = Bukkit.getPlayer(args[0]);
 				PlayerInventory inventory = player.getInventory();
 				ItemStack itemstack = getPaloMontame();
-				inventory.addItem(itemstack);
-				itemstack = getPaloMontate();
 				inventory.addItem(itemstack);
 
 			}catch(Exception e){
