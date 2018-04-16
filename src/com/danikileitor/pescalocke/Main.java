@@ -58,6 +58,11 @@ public class Main extends JavaPlugin implements Listener{
 			new Texto("teHanPescado", "Te ha pescado ARG0 y te ha cambiado por un ARG1", "You have been caught by ARG0 and replaced with a AGR1"),
 			new Texto("hasPescadoAJugador", "Has pescado a ARG0 y lo has cambiado por un ARG1", "You have caught ARG0 and replaced him with a AGR1"),
 			new Texto("hasTransformadoUnMob", "Has transformado un ARG0 en un ARG1", "You transformed a ARG0 into a ARG1"),
+
+			new Texto("hasPescadoAlgo", "Has pescado un ARG0", "You have caught a ARG0"),
+
+			new Texto("jugadorNoEncontrado", "El jugador ARG0 no existe", "Player ARG0 does not exist")
+
 	};
 
 	private String getTexto(String clave, String... argumentos){
@@ -365,11 +370,11 @@ public class Main extends JavaPlugin implements Listener{
 				if (Math.random()>0.1){
 					rng = new Random().nextInt(comidas.size());
 					item = new ItemStack(comidas.get(rng));
-					jugador.sendMessage(MSG+" Has pescado un "+comidas.get(rng).name().toLowerCase().replace("_", " "));
+					jugador.sendMessage(MSG+getTexto("hasPescadoAlgo", comidas.get(rng).name().toLowerCase().replace("_", " ")));
 				}else{
 					rng = new Random().nextInt(items.length);
 					item = new ItemStack(items[rng]);
-					jugador.sendMessage(MSG+" Has pescado un "+items[rng].name().toLowerCase().replace("_", " "));
+					jugador.sendMessage(MSG+getTexto("hasPescadoAlgo", items[rng].name().toLowerCase().replace("_", " ")));
 				}
 
 				ItemMeta propied = item.getItemMeta();
@@ -413,9 +418,9 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				try{
 					Player tio = (Player)sender;
-					tio.sendMessage("El jugador "+args[0]+" no existe.");
+					tio.sendMessage(getTexto("playerNotFound", args[0]));
 				}catch(Exception e1){
-					getServer().broadcastMessage(MSG+" plugin cargado correctamente");
+					getServer().broadcastMessage(MSG+getTexto("playerNotFound"));
 				}
 			}
 
@@ -441,9 +446,9 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				try{
 					Player tio = (Player)sender;
-					tio.sendMessage("El jugador "+args[0]+" no existe.");
+					tio.sendMessage(getTexto("playerNotFound", args[0]));
 				}catch(Exception e1){
-					Bukkit.getConsoleSender().sendMessage("El jugador "+args[0]+" no existe.");
+					getServer().broadcastMessage(MSG+getTexto("pluginCargado"));
 				}
 			}
 
@@ -470,9 +475,9 @@ public class Main extends JavaPlugin implements Listener{
 				}
 				try{
 					Player tio = (Player)sender;
-					tio.sendMessage("El jugador "+args[0]+" no existe.");
+					tio.sendMessage(getTexto("playerNotFound", args[0]));
 				}catch(Exception e1){
-					Bukkit.getConsoleSender().sendMessage("El jugador "+args[0]+" no existe.");
+					getServer().broadcastMessage(MSG+getTexto("playerNotFound"));
 				}
 			}
 
