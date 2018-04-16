@@ -3,6 +3,7 @@ package com.danikileitor.pescalocke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -54,6 +55,7 @@ public class Main extends JavaPlugin implements Listener{
 			new Texto("palosRecibidos", "Disfruta de tus nuevas Cañas de pescar", "Enjoy your new Fishing Rods"),
 
 			new Texto("autoMontarte", "No puedes montarte sobre ti mismo", "You cannot mount on yourself"),
+			new Texto("montarMontado", "No puedes montarte sobre eso", "You cannot mount on that"),
 
 			new Texto("teHanPescado", "Te ha pescado ARG0 y te ha cambiado por un ARG1", "You have been caught by ARG0 and replaced with a AGR1"),
 			new Texto("hasPescadoAJugador", "Has pescado a ARG0 y lo has cambiado por un ARG1", "You have caught ARG0 and replaced him with a AGR1"),
@@ -290,6 +292,14 @@ public class Main extends JavaPlugin implements Listener{
 			}
 			List<Entity> montados = jugador.getPassengers();
 			for (int i = 0; i < montados.size(); i++) {
+				UUID mont = montados.get(i).getUniqueId();
+				UUID pesc = pescao.getUniqueId();
+				if (mont==pesc){
+					jugador.sendMessage(MSG+getTexto("montarMontado"));
+					return;
+				}
+			}
+			for (int i = 0; i < montados.size(); i++) {
 				pescao.addPassenger(montados.get(i));
 			}
 			pescao.addPassenger(jugador);
@@ -303,13 +313,21 @@ public class Main extends JavaPlugin implements Listener{
 				}
 			}
 			List<Entity> pasajeros = jugador.getPassengers();
+			for (int i = 0; i < pasajeros.size(); i++) {
+				UUID mont = pasajeros.get(i).getUniqueId();
+				UUID pesc = pescao.getUniqueId();
+				if (mont==pesc){
+					jugador.sendMessage(MSG+getTexto("montarMontado"));
+					return;
+				}
+			}
 			if (pasajeros.isEmpty())
 				jugador.addPassenger(pescao);
 			else
 				pasajeros.get(pasajeros.size()-1).addPassenger(pescao);
 		}else if (tieneEseNombre(mano, "nombrePaloRandom")){
 			boolean saleMob = false;
-			if (Math.random()>0.80 || evento.getState().equals(State.CAUGHT_ENTITY)){
+			if (Math.random()<0.2 || evento.getState().equals(State.CAUGHT_ENTITY)){
 				saleMob=true;
 			}
 
@@ -323,11 +341,47 @@ public class Main extends JavaPlugin implements Listener{
 				while(!bien){
 					try{
 						rng = new Random().nextInt(mobs.length);
+						switch (mobs[rng]) {
+						case AREA_EFFECT_CLOUD:
+						case ARROW:
+						case FALLING_BLOCK:
+						case LLAMA_SPIT:
+						case LINGERING_POTION:
+						case SHULKER_BULLET:
+						case SPLASH_POTION:
+						case SPECTRAL_ARROW:
+						case TIPPED_ARROW:
+						case ENDER_SIGNAL:
+						case EGG:
+							throw new Exception("Ese no vale");
+						default:
+							break;
+						}
 						aparecida = jugador.getWorld().spawnEntity(pescao.getLocation(), mobs[rng]);
 						aparecida.setCustomName("§4Random "+mobs[rng].getEntityClass().getSimpleName());
 						aparecida.setCustomNameVisible(true);
-						aparecida.setGlowing(true);
 						bien=true;
+
+						if (evento.getState().equals(State.CAUGHT_FISH)){
+							final Entity finalAp= aparecida;
+							aparecida.setGlowing(true);
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+									String name = finalAp.getCustomName();
+									int ticks=10;
+									for (int i = ticks; i > 0; i--) {
+										finalAp.setCustomName(name+"§5 "+i);
+										try {
+											Thread.sleep(100);
+										}catch(InterruptedException e) {}
+									}
+									finalAp.teleport(loc);
+									finalAp.setCustomName(name);
+									finalAp.setGlowing(false);
+								}
+							}).start();
+						}
 					}catch(Exception e){}
 				}
 
@@ -337,25 +391,6 @@ public class Main extends JavaPlugin implements Listener{
 				}else{
 					jugador.sendMessage(MSG+getTexto("hasTransformadoUnMob", pescao.getType().getEntityClass().getSimpleName(), mobs[rng].getEntityClass().getSimpleName()));
 				}
-
-				final Entity finalAp= aparecida;
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						String name = finalAp.getCustomName();
-						int ticks=10;
-						for (int i = ticks; i > 0; i--) {
-							finalAp.setCustomName(name+"§5 "+i);
-							try {
-								Thread.sleep(100);
-							}catch(InterruptedException e) {}
-						}
-						finalAp.teleport(loc);
-						finalAp.setCustomName(name);
-						finalAp.setGlowing(false);
-					}
-				}).start();
-
 			}else{
 				PlayerInventory inventory = jugador.getInventory();
 				Material[] items = Material.values();
@@ -378,14 +413,20 @@ public class Main extends JavaPlugin implements Listener{
 				}
 
 				ItemMeta propied = item.getItemMeta();
-				if (item.getType().equals(Material.BOOK)){
+				switch (item.getType()) {
+				case BOOK:
 					Enchantment[] encs = Enchantment.values();
 					int numRandom = new Random().nextInt(40);
 					for (int i = 0; i < numRandom; i++) {
 						int rng2 = new Random().nextInt(encs.length);
 						propied.addEnchant(encs[rng2], encs[rng2].getMaxLevel(), true);
 					}
+					break;
+
+				default:
+					break;
 				}
+
 				item.setItemMeta(propied);
 
 				inventory.addItem(item);
