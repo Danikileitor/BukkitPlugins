@@ -1,33 +1,33 @@
-name: Pescalocke
+name: RandomFishing
 author: Cristichi
-version: 1.3
+version: 1.5
 main: com.danikileitor.pescalocke.Main
 commands:
-   darPaloRandom:
-      description: Te da un palo de pescar random
-      permission: pescalocke.dar.random
-      usage: /darPaloRandom [Jugador]
-   darPaloNombres:
-      description: Te da un palo de renombrar
-      permission: pescalocke.dar.nombres
-      usage: /darPaloNombres [Jugador]
-   darPaloMontar:
-      description: Te da un palo de montar
-      permission: pescalocke.dar.monturas
-      usage: /darPaloMonturas [Jugador]
+   giveRandomRod:
+      description: Gives you or given player the Random Fishing Rod
+      permission: pescalocke.give.randomrod
+      usage: /giveRandomRod {Player}
+   giveRenameRod:
+      description: Gives you or given player the Renamer Fishing Rod
+      permission: pescalocke.give.renamerod
+      usage: /giveRenameRod {Player}
+   giveMountRods:
+      description: Gives you or given player both Mounts Fishing Rods
+      permission: pescalocke.give.mountrods
+      usage: /giveMountRods {Player}
 permissions:
     pescalocke:
-        description: Vale para todo eres un pro que no te digan lo contrario
+        description: All Pescalocke permissions
         children:
-            pescalocke.dar.random: true
-            pescalocke.dar.nombres: true
-            pescalocke.dar.monturas: true
-    pescalocke.dar.random:
-        description: Te permite dar palos de aleatorizar
-        default: not op
-    pescalocke.dar.nombres:
-        description: Te permite dar palos de poner nombre
-        default: not op
-    pescalocke.dar.montar:
-        description: Te permite dar palos para montarse
-        default: not op
+            pescalocke.give.randomrod: true
+            pescalocke.give.renamerod: true
+            pescalocke.give.mountrods: true
+    pescalocke.give.randomrod:
+        description: Lets you use /giveRandomRod
+        default: op
+    pescalocke.give.renamerod:
+        description: Lets you use /giveRenameRod
+        default: op
+    pescalocke.give.mountrods:
+        description: Lets you use /giveMountRods
+        default: op
