@@ -353,6 +353,7 @@ public class Main extends JavaPlugin implements Listener{
 						case TIPPED_ARROW:
 						case ENDER_SIGNAL:
 						case EGG:
+						case SNOWBALL:
 							throw new Exception("Ese no vale");
 						default:
 							break;
