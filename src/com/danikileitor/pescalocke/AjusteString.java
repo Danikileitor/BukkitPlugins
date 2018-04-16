@@ -1,10 +1,10 @@
 package com.danikileitor.pescalocke;
 
-public class Ajuste {
+public class AjusteString {
 	public String clave;
-	public boolean porDefecto;
+	public String porDefecto;
 
-	public Ajuste(String clave, boolean predeterminado) {
+	public AjusteString(String clave, String predeterminado) {
 		this.clave = clave;
 		this.porDefecto= predeterminado;
 	}
