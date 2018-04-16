@@ -1,4 +1,4 @@
-package com.danikileitor.pescalocke;
+package com.cristichidnk.pescalocke;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.danikileitor.pescalocke;
+package com.cristichidnk.pescalocke;
 
 public class AjusteBool {
 	public String clave;

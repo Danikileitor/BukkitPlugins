@@ -1,7 +1,7 @@
 name: RandomFishing
 author: Cristichi
 version: 1.5
-main: com.danikileitor.pescalocke.Main
+main: com.cristichidnk.pescalocke.Main
 commands:
    giveRandomRod:
       description: Gives you or given player the Random Fishing Rod

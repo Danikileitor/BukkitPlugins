@@ -1,4 +1,4 @@
-package com.danikileitor.pescalocke;
+package com.cristichidnk.pescalocke;
 
 public class Error404 extends RuntimeException {
 	private static final long serialVersionUID = 6647502596600707177L;
