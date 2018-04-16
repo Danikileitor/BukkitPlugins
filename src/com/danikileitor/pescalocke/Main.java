@@ -88,6 +88,24 @@ public class Main extends JavaPlugin implements Listener{
 		return item;
 	}
 
+	public ItemStack getPaloMontate(){
+		ItemStack item = new ItemStack(Material.FISHING_ROD, 1);
+
+		ItemMeta propied = item.getItemMeta();
+		ArrayList<String> lores = new ArrayList<>();
+		lores.add("Pon tu nombre en todo");
+		lores.add("Generada por PescaLocke");
+		propied.setLore(lores);
+		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
+		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
+		propied.setDisplayName("§4§KCaña de Pescar 3§6§O MONTATE");
+		item.setItemMeta(propied);
+
+		return item;
+	}
+
 	@Override
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
@@ -124,6 +142,8 @@ public class Main extends JavaPlugin implements Listener{
 			inventory.addItem(itemstack);
 			itemstack = getPaloNombres();
 			inventory.addItem(itemstack);
+			itemstack = getPaloMontate();
+			inventory.addItem(itemstack);
 			itemstack = getPaloMontame();
 			inventory.addItem(itemstack);
 			player.sendMessage(MSG+" Has recibido las cañas del amor.");
@@ -141,6 +161,8 @@ public class Main extends JavaPlugin implements Listener{
 			ItemStack itemstack = getPaloRandom();
 			inventory.addItem(itemstack);
 			itemstack = getPaloNombres();
+			inventory.addItem(itemstack);
+			itemstack = getPaloMontate();
 			inventory.addItem(itemstack);
 			itemstack = getPaloMontame();
 			inventory.addItem(itemstack);
@@ -188,12 +210,12 @@ public class Main extends JavaPlugin implements Listener{
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void onPlayerFish(PlayerFishEvent pesca) {
-		Entity pescao = pesca.getCaught();
+	public void onPlayerFish(PlayerFishEvent evento) {
+		Entity pescao = evento.getCaught();
 		if (pescao==null){
 			return;
 		}
-		Player jugador = pesca.getPlayer();
+		Player jugador = evento.getPlayer();
 
 		pescao.isGlowing();
 		ItemStack mano = jugador.getItemInHand();
@@ -204,15 +226,35 @@ public class Main extends JavaPlugin implements Listener{
 			pescao.setCustomNameVisible(true);
 
 		}else if (mismoItem(mano, getPaloMontame())){
+			if (pescao instanceof Player){
+				Player pescado = (Player) pescao;
+				if (pescado.getPlayerListName().equals(jugador.getPlayerListName())){
+					jugador.sendMessage(MSG+" No puedes subirte sobre ti mismo");
+					return;
+				}
+			}
 			List<Entity> montados = jugador.getPassengers();
 			for (int i = 0; i < montados.size(); i++) {
 				pescao.addPassenger(montados.get(i));
 			}
 			pescao.addPassenger(jugador);
 
+		}else if (mismoItem(mano, getPaloMontate())){
+			if (pescao instanceof Player){
+				Player pescado = (Player) pescao;
+				if (pescado.getPlayerListName().equals(jugador.getPlayerListName())){
+					jugador.sendMessage(MSG+" No puedes subirte sobre ti mismo");
+					return;
+				}
+			}
+			List<Entity> pasajeros = jugador.getPassengers();
+			if (pasajeros.isEmpty())
+				jugador.addPassenger(pescao);
+			else
+				pasajeros.get(pasajeros.size()-1).addPassenger(pescao);
 		}else if (mismoItem(mano, getPaloRandom())){
 			boolean saleMob = false;
-			if (Math.random()>0.80 || pesca.getState().equals(State.CAUGHT_ENTITY)){
+			if (Math.random()>0.80 || evento.getState().equals(State.CAUGHT_ENTITY)){
 				saleMob=true;
 			}
 
@@ -231,16 +273,14 @@ public class Main extends JavaPlugin implements Listener{
 						aparecida.setCustomNameVisible(true);
 						aparecida.setGlowing(true);
 						bien=true;
-					}catch(Exception e){
-						//getLogger().info("§A Error al hacer spawn a "+mobs[rng].getEntityClass().getTypeName());
-					}
+					}catch(Exception e){}
 				}
 
 				if (pescao instanceof Player){
 					pescao.sendMessage(MSG+" Te ha pescado "+jugador.getName()+" y te ha cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
 					jugador.sendMessage(MSG+" Has pescado a "+pescao.getName()+" y lo has cambiado por "+aparecida.getType().getEntityClass().getSimpleName());
 				}else{
-					jugador.sendMessage(MSG+" Has pescado un "+mobs[rng].getEntityClass().getSimpleName());
+					jugador.sendMessage(MSG+" Has transformado un "+pescao.getType().getEntityClass().getSimpleName()+" en un "+mobs[rng].getEntityClass().getSimpleName());
 				}
 
 				final Entity finalAp= aparecida;
@@ -325,7 +365,7 @@ public class Main extends JavaPlugin implements Listener{
 					Player tio = (Player)sender;
 					tio.sendMessage("El jugador "+args[0]+" no existe.");
 				}catch(Exception e1){
-					getServer().broadcastMessage(MSG+" El jugador "+args[0]+" no existe.");
+					getServer().broadcastMessage(MSG+" plugin cargado correctamente");
 				}
 			}
 
@@ -370,6 +410,8 @@ public class Main extends JavaPlugin implements Listener{
 				Player player = Bukkit.getPlayer(args[0]);
 				PlayerInventory inventory = player.getInventory();
 				ItemStack itemstack = getPaloMontame();
+				inventory.addItem(itemstack);
+				itemstack = getPaloMontate();
 				inventory.addItem(itemstack);
 
 			}catch(Exception e){
