@@ -1,6 +1,6 @@
 name: RandomFishing
 author: Cristichi&Danikileitor
-version: 1.6
+version: 1.7
 main: com.cristichidnk.pescalocke.Main
 commands:
    giveRandomRod:
