@@ -23,6 +23,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin implements Listener{
@@ -127,9 +128,8 @@ public class Main extends JavaPlugin implements Listener{
 		propied.setLore(lores);
 		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
 		propied.setDisplayName(getTexto("nombrePaloRandom"));
+		propied.setUnbreakable(true);
 		item.setItemMeta(propied);
 
 		return item;
@@ -145,9 +145,8 @@ public class Main extends JavaPlugin implements Listener{
 		propied.setLore(lores);
 		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
 		propied.setDisplayName(getTexto("nombrePaloNombres"));
+		propied.setUnbreakable(true);
 		item.setItemMeta(propied);
 
 		return item;
@@ -163,9 +162,8 @@ public class Main extends JavaPlugin implements Listener{
 		propied.setLore(lores);
 		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
 		propied.setDisplayName(getTexto("nombrePaloMontame"));
+		propied.setUnbreakable(true);
 		item.setItemMeta(propied);
 
 		return item;
@@ -181,9 +179,8 @@ public class Main extends JavaPlugin implements Listener{
 		propied.setLore(lores);
 		propied.addEnchant(Enchantment.LUCK, Enchantment.LUCK.getMaxLevel(), true);
 		propied.addEnchant(Enchantment.LURE, Enchantment.LURE.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.MENDING, Enchantment.MENDING.getMaxLevel(), true);
-		propied.addEnchant(Enchantment.DURABILITY, Enchantment.DURABILITY.getMaxLevel(), true);
 		propied.setDisplayName(getTexto("nombrePaloMontate"));
+		propied.setUnbreakable(true);
 		item.setItemMeta(propied);
 
 		return item;
@@ -364,7 +361,6 @@ public class Main extends JavaPlugin implements Listener{
 					switch (entidades[i]) {
 					case AREA_EFFECT_CLOUD:
 					case ARROW:
-					case FALLING_BLOCK:
 					case LLAMA_SPIT:
 					case LINGERING_POTION:
 					case SHULKER_BULLET:
@@ -381,13 +377,12 @@ public class Main extends JavaPlugin implements Listener{
 					case WITHER:
 					case WITHER_SKULL:
 					case ENDER_CRYSTAL:
-						if (getAjusteBool("randomizePowerfulMobs") && entidades[i].isSpawnable()){
+						if (getAjusteBool("randomizePowerfulMobs")){
 							mobs.add(entidades[i]);
 						}
 						break;
 					default:
-						if (entidades[i].isSpawnable())
-							mobs.add(entidades[i]);
+						mobs.add(entidades[i]);
 						break;
 					}
 				}
@@ -398,7 +393,22 @@ public class Main extends JavaPlugin implements Listener{
 				while(!bien){
 					try{
 						rng = new Random().nextInt(entidades.length);
-						aparecida = jugador.getWorld().spawnEntity(pescao.getLocation(), mobs.get(rng));
+						switch (mobs.get(rng)) {
+						case FALLING_BLOCK:
+							Material[] items = Material.values();
+							ArrayList<Material> bloques = new ArrayList<>(items.length);
+							for (int i = 0; i < items.length; i++) {
+								if (items[i].isBlock()){
+									bloques.add(items[i]);
+								}
+							}
+							aparecida = jugador.getWorld().spawnFallingBlock(pescao.getLocation(),
+									new MaterialData(bloques.get(new Random().nextInt(bloques.size()))));
+							break;
+						default:
+							aparecida = jugador.getWorld().spawnEntity(pescao.getLocation(), mobs.get(rng));
+							break;
+						}
 						aparecida.setCustomName("§4Random "+mobs.get(rng).getEntityClass().getSimpleName());
 						aparecida.setCustomNameVisible(true);
 						bien=true;
