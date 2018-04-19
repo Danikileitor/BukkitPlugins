@@ -200,7 +200,6 @@ public class Main extends JavaPlugin implements Listener{
 		for (int i = 0; i < ajustesStrings.length; i++) {
 			if (!getConfig().isSet(ajustesStrings[i].clave)){
 				getConfig().set(ajustesStrings[i].clave, ajustesStrings[i].porDefecto);
-				getServer().getConsoleSender().sendMessage(MSG+getTexto("crearAjuste", ajustesStrings[i].clave, ajustesStrings[i].porDefecto));
 			}else{
 				getConfig().set(ajustesStrings[i].clave, getConfig().getString(ajustesStrings[i].clave));
 			}
@@ -208,7 +207,6 @@ public class Main extends JavaPlugin implements Listener{
 		for (int i = 0; i < ajustesBool.length; i++) {
 			if (!getConfig().isSet(ajustesBool[i].clave)){
 				getConfig().set(ajustesBool[i].clave, ajustesBool[i].porDefecto);
-				getServer().getConsoleSender().sendMessage(MSG+getTexto("crearAjuste", ajustesBool[i].clave, Boolean.toString(ajustesBool[i].porDefecto)));
 			}else{
 				getConfig().set(ajustesBool[i].clave, getConfig().getBoolean(ajustesBool[i].clave));
 			}
@@ -296,7 +294,7 @@ public class Main extends JavaPlugin implements Listener{
 	@EventHandler
 	public void onPlayerFish(PlayerFishEvent evento) {
 		Entity pescao = evento.getCaught();
-		if (pescao==null){
+		if (pescao==null || pescao.getType().equals(EntityType.COMPLEX_PART)){
 			return;
 		}
 		Player jugador = evento.getPlayer();
@@ -374,6 +372,7 @@ public class Main extends JavaPlugin implements Listener{
 					case SPECTRAL_ARROW:
 					case TIPPED_ARROW:
 					case ENDER_SIGNAL:
+					case ENDER_PEARL:
 					case EGG:
 					case SNOWBALL:
 						break;
@@ -382,12 +381,13 @@ public class Main extends JavaPlugin implements Listener{
 					case WITHER:
 					case WITHER_SKULL:
 					case ENDER_CRYSTAL:
-						if (getAjusteBool("randomizePowerfulMobs")){
+						if (getAjusteBool("randomizePowerfulMobs") && entidades[i].isSpawnable()){
 							mobs.add(entidades[i]);
 						}
 						break;
 					default:
-						mobs.add(entidades[i]);
+						if (entidades[i].isSpawnable())
+							mobs.add(entidades[i]);
 						break;
 					}
 				}
