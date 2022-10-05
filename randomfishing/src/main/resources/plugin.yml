@@ -1,6 +1,6 @@
 name: RandomFishing
 main: com.cristichidnk.randomfishing.Main
-version: 1.7
+version: 1.8
 api-version: 1.19
 authors: [Danikileitor, Cristichi]
 description: Add to your fun server some special Fishing Rods!
